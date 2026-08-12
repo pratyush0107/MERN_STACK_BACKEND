@@ -1,0 +1,148 @@
+# ============================================
+# Node.js
+# ============================================
+
+# Dependencies
+node_modules/
+jspm_packages/
+bower_components/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Runtime data
+pids/
+*.pid
+*.seed
+*.pid.lock
+
+# Diagnostic reports
+report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
+
+# ============================================
+# Build / Output
+# ============================================
+
+dist/
+build/
+out/
+.next/
+.nuxt/
+.svelte-kit/
+.vuepress/dist/
+.docusaurus/
+
+# Gatsby
+.cache/
+
+# ============================================
+# Test / Coverage
+# ============================================
+
+coverage/
+*.lcov
+.nyc_output/
+
+# ============================================
+# TypeScript
+# ============================================
+
+*.tsbuildinfo
+
+# ============================================
+# Environment Variables
+# ============================================
+
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# ============================================
+# Package Manager
+# ============================================
+
+.npm/
+.yarn/cache/
+.yarn/unplugged/
+.yarn/build-state.yml
+.yarn/install-state.gz
+.yarn-integrity
+.pnp.*
+
+# npm pack
+*.tgz
+
+# ============================================
+# Caches
+# ============================================
+
+.cache/
+.parcel-cache/
+.webpack/
+.grunt/
+.fusebox/
+.rpt2_cache/
+.rts2_cache_cjs/
+.rts2_cache_es/
+.rts2_cache_umd/
+.temp/
+
+# ============================================
+# Tooling
+# ============================================
+
+.eslintcache
+.stylelintcache
+.prettier-cache
+
+# ============================================
+# IDE / Editors
+# ============================================
+
+.vscode/
+!.vscode/settings.json
+!.vscode/extensions.json
+!.vscode/tasks.json
+!.vscode/launch.json
+
+.idea/
+*.swp
+*.swo
+
+# ============================================
+# OS Files
+# ============================================
+
+.DS_Store
+Thumbs.db
+
+# ============================================
+# Miscellaneous
+# ============================================
+
+.node_repl_history
+.tern-port
+
+# ============================================
+# Serverless
+# ============================================
+
+.serverless/
+.dynamodb/
+
+# ============================================
+# Legacy / Native Builds
+# ============================================
+
+lib-cov/
+.lock-wscript
+build/Release
+web_modules/

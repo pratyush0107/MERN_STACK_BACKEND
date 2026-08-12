@@ -1,0 +1,40 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "learning backend with node.js",
+  "keywords": [
+    "javascript",
+    "node.js",
+    "gurjar"
+  ],
+  "homepage": "https://github.com/pratyush0107/MERN_STACK_BACKEND#readme",
+  "bugs": {
+    "url": "https://github.com/pratyush0107/MERN_STACK_BACKEND/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pratyush0107/MERN_STACK_BACKEND.git"
+  },
+  "license": "ISC",
+  "author": "Pratyush Gurjar",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon backend_code/src/index.js"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.14",
+    "prettier": "^3.9.6"
+  },
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "jsonwebtoken": "^9.0.3",
+    "mongoose": "^9.9.1",
+    "mongoose-aggregate-paginate-v2": "^1.1.5"
+  }
+}
