@@ -21,7 +21,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon backend_code/src/index.js"
+    "dev": "nodemon src/index.js"
   },
   "devDependencies": {
     "nodemon": "^3.1.14",

@@ -11,7 +11,7 @@ dns.setServers(["8.8.8.8"]);
 const app = express();
 
 dotenv.config({
-    path: "./backend_code/.env"
+    path: "./.env"
 });
 
 console.log("MONGODB_URI exists:", !!process.env.MONGODB_URI);
