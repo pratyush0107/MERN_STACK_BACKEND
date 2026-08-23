@@ -29,6 +29,9 @@ const ConnectDB= async ()=>{
 
         app.listen(process.env.PORT,()=>{
             console.log(`App is listening on port: ${process.env.PORT}`);
+            console.log(` http://localhost:${process.env.PORT}/api/v1/user/`);
+           
+
             
         })
 
