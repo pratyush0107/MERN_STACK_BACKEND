@@ -21,11 +21,11 @@
 
 // export {asyncHandler}
 
-const asyncHandler = (func) => async (req, res, next) => {
+const asyncHandler = (func) => async (req, res) => {
     try {
-        await func(req, res, next);
+        await func(req, res);
     } catch (error) {
-        res.status(error.code || 500).json({
+        res.status(error.statusCode || 500).json({
             success: false,
             message: error.message
         });

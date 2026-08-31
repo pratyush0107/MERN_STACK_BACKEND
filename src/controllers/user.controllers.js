@@ -16,8 +16,15 @@ import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import { apiResponse } from "../utils/apiResponse.js";
 
 const registerUser = asyncHandler(async (req, res) => {
-    console.log("RegisterUser controller called");
-
+    console.log("\n========== NEW REQUEST ==========");
+    console.log("Method:", req.method);
+    console.log("URL:", req.originalUrl);
+    console.log("Content-Type:", req.headers["content-type"]);
+    console.log("Request body:", req.body);
+    console.log("Request files:", req.files);
+    if (!req.body) {
+        throw new apiErrors(400, "Request body is missing");
+    }
     // Get user details from frontend
     const { fullname, username, email, password } = req.body;
 
@@ -43,7 +50,20 @@ const registerUser = asyncHandler(async (req, res) => {
     }
 
     // Get files uploaded by multer
-    const avatarLocalFilePath = req.files?.avatar?.[0]?.path;
+   const avatarLocalFilePath = req.files?.avatar?.[0]?.path;
+   console.log("BODY:", req.body);
+   console.log("FILES:", req.files);
+// const avatarFile = req.files?.find(
+//     (file) => file.fieldname === "avatar"
+// );
+
+// const coverImageFile = req.files?.find(
+//     (file) => file.fieldname === "coverImage"
+// );
+
+// const coverImageLocalFilePath = coverImageFile?.path;
+
+// const avatarLocalFilePath = avatarFile?.path;
 
     const coverImageLocalFilePath =
         req.files?.coverImage?.[0]?.path;
@@ -96,7 +116,7 @@ const registerUser = asyncHandler(async (req, res) => {
             "User could not be created"
         );
     }
-
+     
     // Return response
     return res
         .status(201)

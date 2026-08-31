@@ -23,7 +23,7 @@ const ConnectDB= async ()=>{
         console.log(`Database connected at host: ${connectionInstance}`);
         console.log(`Database connected at host: ${connectionInstance.connection.host}`);
         app.on("Error",(error)=>{
-             console.error("Error in connection : ",error)
+             console.error("Error in connection : ",error);
              throw error
         })
 
