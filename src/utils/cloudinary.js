@@ -3,40 +3,48 @@ import fs from "fs";
 import dotenv from "dotenv";
 
 dotenv.config();
-console.log("Cloudinary name exists:", !!process.env.CLOUDINARY_NAME);
-console.log("Cloudinary API key exists:", !!process.env.CLOUDINARY_API_KEY);
-console.log("Cloudinary secret exists:", !!process.env.CLOUDINARY_API_SECRET);
+
 cloudinary.config({
-    cloud_name: process.env.CLOUDINARY_NAME,
-    api_key: process.env.CLOUDINARY_API_KEY,
-    api_secret: process.env.CLOUDINARY_API_SECRET
+cloud_name: process.env.CLOUDINARY_NAME,
+api_key: process.env.CLOUDINARY_API_KEY,
+api_secret: process.env.CLOUDINARY_API_SECRET
 });
 
 const uploadOnCloudinary = async (localFilePath) => {
-    try {
-        if (!localFilePath) {
-            return null;
+try {
+if (!localFilePath) {
+return null;
+}
+
+
+    const uploadResult = await cloudinary.uploader.upload(
+        localFilePath,
+        {
+            resource_type: "auto"
         }
+    );
 
-        const uploadResult = await cloudinary.uploader.upload(localFilePath);
+    console.log("File uploaded to Cloudinary:", uploadResult.secure_url);
 
-        console.log("File uploaded to Cloudinary:", uploadResult);
+    return uploadResult;
 
-        // Remove local file after successful upload
-        fs.unlinkSync(localFilePath);
+} catch (error) {
+    console.error("Cloudinary upload error:", error);
+    return null;
 
-        return uploadResult;
-        console.log("uploadResult");
-
-    } catch (error) {
-        console.log("Cloudinary upload error:", error);
-
-        // Remove local file if it exists
-        if (localFilePath && fs.existsSync(localFilePath)) {
+} finally {
+    // This always executes
+    if (localFilePath && fs.existsSync(localFilePath)) {
+        try {
             fs.unlinkSync(localFilePath);
+            console.log("Local file deleted:", localFilePath);
+        } catch (unlinkError) {
+            console.error("Error deleting local file:", unlinkError);
         }
-
-        return null;
     }
+}
+
+
 };
+
 export { uploadOnCloudinary };
