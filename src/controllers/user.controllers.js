@@ -21,7 +21,7 @@ const registerUser = asyncHandler(async (req, res) => {
     console.log("URL:", req.originalUrl);
     console.log("Content-Type:", req.headers["content-type"]);
     console.log("Request body:", req.body);
-    console.log("Request files:", req.files);
+    console.log("Request files shown:", req.files);
     if (!req.body) {
         throw new apiErrors(400, "Request body is missing");
     }
