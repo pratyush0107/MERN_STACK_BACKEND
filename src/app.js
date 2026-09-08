@@ -20,8 +20,6 @@ import {router as userRoute} from './routes/user.routes.js'
 // routes declaration
 app.use("/api/v1/user",userRoute)
 
-app.use("/api/v1/user",userRoute)
-
 
 
 export { app }

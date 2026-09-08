@@ -18,8 +18,8 @@ const generate_accesstoken_refreshToken = async(userId)=>{
         const accessToken= await user.generateAccessTokens();
         const refreshToken= await user.generateRefreshTokens();
 
-        User.refreshToken=refreshToken;
-        await User.save({ validateBeforeSave: false })
+        user.refreshToken=refreshToken;
+        await user.save({ validateBeforeSave: false })
 
         return {refreshToken,accessToken}
         
@@ -33,7 +33,7 @@ const loginUser= asyncHandler(async (req,res)=>{
     console.log(req.body) // use req.query if sending get request
     const {username,email,password} =req.body;
     
-    if(!username||!email){
+    if(!(username||email)){
         throw new apiErrors(400,"email or username is required");
     }
     const user = await User.findOne({
@@ -54,7 +54,7 @@ const loginUser= asyncHandler(async (req,res)=>{
 
     const options ={
         httpOnly:true,
-        secure:true
+        secure: process.env.NODE_ENV === "production"
     }
     return res.status(200).cookie("accessToken",accessToken,options)
     .cookie("refreshToken",refreshToken,options)
@@ -69,12 +69,12 @@ const loginUser= asyncHandler(async (req,res)=>{
     )
 })
 
-const logout =  asyncHandler((req,res)=>{
-    User.findByIdAndUpdate(
+const logOut =  asyncHandler(async(req,res)=>{
+    const user = await User.findByIdAndUpdate(
         req.user._id,
         {
-            $set: {
-               refreshToken:undefined
+            $unset: {
+               refreshToken: 1
             }
         },
         {
@@ -84,14 +84,14 @@ const logout =  asyncHandler((req,res)=>{
     )
     const options ={
         httpOnly:true,
-        secure:true
+        secure: process.env.NODE_ENV === "production"
     }
-
+   
     return res
     .status(200)
     .clearCookie("accessToken",options)
     .clearCookie("refreshToken",options)
-    .json(new apiResponse(200,{},"user loggedout successfully"))
+    .json(new apiResponse(200,{"user": user},"user loggedout successfully"))
 })
 
 export {loginUser , logOut};
