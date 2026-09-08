@@ -69,8 +69,8 @@ const loginUser= asyncHandler(async (req,res)=>{
     )
 })
 
-const logout = asyncHandler((req,res)=>{
-   await User.findByIdAndUpdate(
+const logout =  asyncHandler((req,res)=>{
+    User.findByIdAndUpdate(
         req.user._id,
         {
             $set: {
