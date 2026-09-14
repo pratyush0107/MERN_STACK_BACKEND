@@ -31,7 +31,7 @@ const generate_accesstoken_refreshToken = async(userId)=>{
 const loginUser= asyncHandler(async (req,res)=>{
     console.log("inside loginUser")
     console.log(req.body) // use req.query if sending get request
-    const {username,email,password} =req.body;
+    const {username,email,password} =req.body
     
     if(!(username||email)){
         throw new apiErrors(400,"email or username is required");
@@ -94,4 +94,4 @@ const logOut =  asyncHandler(async(req,res)=>{
     .json(new apiResponse(200,{"user": user},"user loggedout successfully"))
 })
 
-export {loginUser , logOut};
+export {loginUser , logOut ,generate_accesstoken_refreshToken};

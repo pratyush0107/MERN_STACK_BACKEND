@@ -14,6 +14,8 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import { User } from "../models/user.model.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import { apiResponse } from "../utils/apiResponse.js";
+import jwt from "jsonwebtoken";
+import { generate_accesstoken_refreshToken } from "login.controller.js";
 
 const registerUser = asyncHandler(async (req, res) => {
     console.log("\n========== NEW REQUEST ==========");
@@ -129,4 +131,45 @@ const registerUser = asyncHandler(async (req, res) => {
         );
 });
 
-export { registerUser };
+const refreshAccessToken = asyncHandler(async(req,res)=>{
+    const incomingRefreshToken = req.cookies.refreshToken||req.body.refreshToken
+    
+    if(!incomingRefreshAccessToken){
+        throw new apiErrors(401,"unauthorized request")
+    } 
+
+    const decodedToken = jwt.verify(incomingRefreshToken,process.env.REFRESH_TOKEN_SECRET)
+    
+    const user = await User.findById(decodedToken._id)
+    if(incomingRefreshToken !== user.refreshToken){
+        throw new apiErrors(401,"refresh token expired or used")
+    } 
+
+    const {accessToken,newrefreshToken} = await generate_accesstoken_refreshToken(user._id)
+    
+    const options ={
+        httpOnly:true,
+        secure: process.env.NODE_ENV === "production"
+    }
+
+    req.
+    status(200).
+    cookie("accessToken",accessToken,options).
+    cookie("refreshToken",newrefreshToken,options).
+    json(
+        
+             new apiResponse(
+                200,
+                {
+                    "accessToken":accessToken,
+                    "refreshToken":newrfreshToken
+                },
+                "user "
+
+            )
+        
+    )
+
+})
+
+export { registerUser , refreshAccessToken};
