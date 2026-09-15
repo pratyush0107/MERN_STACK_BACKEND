@@ -15,7 +15,7 @@ import { User } from "../models/user.model.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import { apiResponse } from "../utils/apiResponse.js";
 import jwt from "jsonwebtoken";
-import { generate_accesstoken_refreshToken } from "login.controller.js";
+import { generate_accesstoken_refreshToken } from "../controllers/login.controllers.js";
 
 const registerUser = asyncHandler(async (req, res) => {
     console.log("\n========== NEW REQUEST ==========");
@@ -131,45 +131,56 @@ const registerUser = asyncHandler(async (req, res) => {
         );
 });
 
-const refreshAccessToken = asyncHandler(async(req,res)=>{
-    const incomingRefreshToken = req.cookies.refreshToken||req.body.refreshToken
-    
-    if(!incomingRefreshAccessToken){
-        throw new apiErrors(401,"unauthorized request")
-    } 
+const refreshAccessToken = asyncHandler(async (req, res) => {
+    const incomingRefreshToken = req.cookies?.refreshToken || req.body?.refreshToken;
 
-    const decodedToken = jwt.verify(incomingRefreshToken,process.env.REFRESH_TOKEN_SECRET)
-    
-    const user = await User.findById(decodedToken._id)
-    if(incomingRefreshToken !== user.refreshToken){
-        throw new apiErrors(401,"refresh token expired or used")
-    } 
-
-    const {accessToken,newrefreshToken} = await generate_accesstoken_refreshToken(user._id)
-    
-    const options ={
-        httpOnly:true,
-        secure: process.env.NODE_ENV === "production"
+    if (!incomingRefreshToken) {
+        throw new apiErrors(401, "Unauthorized request: Refresh token is missing");
     }
 
-    req.
-    status(200).
-    cookie("accessToken",accessToken,options).
-    cookie("refreshToken",newrefreshToken,options).
-    json(
-        
-             new apiResponse(
-                200,
-                {
-                    "accessToken":accessToken,
-                    "refreshToken":newrfreshToken
-                },
-                "user "
+    try {
+        const decodedToken = jwt.verify(
+            incomingRefreshToken,
+            process.env.REFRESH_TOKEN_SECRET
+        );
 
-            )
-        
-    )
+        const user = await User.findById(decodedToken?._id);
 
-})
+        if (!user) {
+            throw new apiErrors(404, "User not found or invalid token");
+        }
+
+        if (incomingRefreshToken !== user?.refreshToken) {
+            throw new apiErrors(401, "Refresh token is expired or has already been used");
+        }
+
+        const { accessToken, refreshToken } = await generate_accesstoken_refreshToken(user._id);
+
+        const options = {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production"
+        };
+
+        return res
+            .status(200)
+            .cookie("accessToken", accessToken, options)
+            .cookie("refreshToken", refreshToken, options)
+            .json(
+                new apiResponse(
+                    200,
+                    {
+                        accessToken,
+                        refreshToken
+                    },
+                    "Access token refreshed successfully"
+                )
+            );
+    } catch (error) {
+        throw new apiErrors(
+            error.statusCode || 401,
+            error.message || "Invalid or expired refresh token"
+        );
+    }
+});
 
 export { registerUser , refreshAccessToken};
