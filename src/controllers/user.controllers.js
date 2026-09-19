@@ -254,4 +254,29 @@ const updateAvatar = asyncHandler(async(req,res)=>{
     )
 })
 
+const getUserProfile = asyncHandler(async(req,res)=>{
+
+    const {username} = req.params
+
+    if(!username?.trim()){
+        throw new apiErrors(400,"username is not found")
+    }
+
+    const channel = await User.aggregate([
+        {
+            $match:{
+                username : username?.toLowerCase()
+            }
+        },
+        {
+            $lookup:{
+                 from: "subscriptions",
+                 localField: "_id",
+                 foreignField: "channel",
+                 as: "subscribedTO"
+            }
+        }
+    ])
+})
+
 export { registerUser , refreshAccessToken , changePassword,  getCurrentUser , updateAvatar };
