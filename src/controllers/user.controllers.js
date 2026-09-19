@@ -248,8 +248,7 @@ const updateAvatar = asyncHandler(async(req,res)=>{
         {new:true}
     ).select("-password")
 
-    res
-    .status(200)
+    return res.status(200)
     .json(
         new apiResponse(200,{user:user},"avatar updated successfully")
     )
