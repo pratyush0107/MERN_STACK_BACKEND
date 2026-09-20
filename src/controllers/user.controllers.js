@@ -273,10 +273,36 @@ const getUserProfile = asyncHandler(async(req,res)=>{
                  from: "subscriptions",
                  localField: "_id",
                  foreignField: "channel",
-                 as: "subscribedTO"
+                 as: "subscribers"
+            },
+        },
+        {
+            $lookup:{
+                from:"subscription",
+                localField:"_id",
+                foreignField:"subscribers",
+                as:"subsCribedTo"
+            }
+
+        },
+        {
+            $addFields:{
+
+                subscribersCount:{
+                   $size:"$subscribers"
+                },
+                channelSubscribedToCount:{
+                    $size:"$subscribedTO"
+                },
+                isSubscribed:{
+                    if:{$in:[req.user._id,"subscribers."]},
+                    then:true,
+                    else:false
+                }
+                
             }
         }
     ])
 })
 
-export { registerUser , refreshAccessToken , changePassword,  getCurrentUser , updateAvatar };
+export { registerUser , refreshAccessToken , changePassword,  getCurrentUser , updateAvatar ,getUserProfile };
