@@ -301,8 +301,27 @@ const getUserProfile = asyncHandler(async(req,res)=>{
                 }
                 
             }
+        },
+        {
+            $project:{
+                fullname:1,
+                username:1,
+                subscribersCount:1,
+                subscribedTo:1,
+                isSubscribed:1,
+                avatar:1,
+                coverImage:1
+            }
         }
+
     ])
+
+    if(!channel?.length){
+        throw new apiErrors(400," Channel doesn't exist ")
+    }
+
+    return res.status(200)
+    .json(new apiResponse(200,"User channel fetched successfully"))
 })
 
 export { registerUser , refreshAccessToken , changePassword,  getCurrentUser , updateAvatar ,getUserProfile };
