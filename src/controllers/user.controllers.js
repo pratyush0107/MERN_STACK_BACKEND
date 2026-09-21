@@ -182,7 +182,7 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
         );
     }
 });
-
+// function for change password
 const changePassword =  asyncHandler(async(req,res)=>{
     const {oldPassword,newPassword} = req.body()
 
