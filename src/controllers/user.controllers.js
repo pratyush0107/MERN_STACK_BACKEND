@@ -16,6 +16,7 @@ import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import { apiResponse } from "../utils/apiResponse.js";
 import jwt from "jsonwebtoken";
 import { generate_accesstoken_refreshToken } from "../controllers/login.controllers.js";
+import mongoose from "mongoose";
 
 const registerUser = asyncHandler(async (req, res) => {
     console.log("\n========== NEW REQUEST ==========");
@@ -324,4 +325,54 @@ const getUserProfile = asyncHandler(async(req,res)=>{
     .json(new apiResponse(200,"User channel fetched successfully"))
 })
 
-export { registerUser , refreshAccessToken , changePassword,  getCurrentUser , updateAvatar ,getUserProfile };
+const getWatchHistory = asyncHandler(async(req,res)=>{
+
+    const user = User.aggregate([
+        {
+            $match:{
+                _id:new mongoose.Types.ObjectId(req.user._id)
+            }
+        },
+        {
+            $lookup:{
+                from:"video",
+                localField:"watchHistory",
+                foreignField:"_id",
+                as:"watchHistory",
+                pipeline:[
+                    {
+                        $lookup:{
+                            from:"users",
+                            localField:"owner",
+                            foreignField:"_id",
+                            as:"owner",
+                            pipeline:[
+                                {
+                                    $project:{
+                                        fullname:1,
+                                        username:1,
+                                        avatar:1
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        $addFields:{
+                            owner:{
+                                $first: "$owner"
+                            }
+                        }
+                    }
+                ]
+            }
+        }
+    ])
+
+    return res
+    .status(200)
+    .json(new apiResponse(200,user[0].getWatchHistory,"watchHistory sent successfully"));
+
+})
+
+export { registerUser , refreshAccessToken , changePassword,  getCurrentUser , updateAvatar , getUserProfile , getWatchHistory };
