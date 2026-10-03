@@ -214,7 +214,9 @@ const getCurrentUser = asyncHandler(async(req,res) => {
 })
 
 const updateAccountDetails = asyncHandler(async(req,res)=>{
-    const {fullname , email} = req.body();
+    console.log("inside update")
+    console.log(req.body)
+    const {fullname , email} = req.body
     if(!fullname||!email){
         throw new apiErrors(401,"fullname or email is required")
     }
@@ -223,9 +225,9 @@ const updateAccountDetails = asyncHandler(async(req,res)=>{
             $set: {
                fullname,
                email:email
-            }
+            } 
         },
-        {new:ture}
+        {new:true}
     ).select("-password")
     return res.status(200)
     .json(new apiResponse(200,user,"user updated successfully"))
@@ -260,7 +262,7 @@ const getUserProfile = asyncHandler(async(req,res)=>{
     const {username} = req.params
 
     if(!username?.trim()){
-        throw new apiErrors(400,"username is not found")
+        throw new apiErrors(400,"username is not found")   
     }
 
     const channel = await User.aggregate([
